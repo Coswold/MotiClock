@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+  <html>
+      <head>
+         <meta charset="utf-8">
+         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Landing</title>
+            <link rel="stylesheet" type="text/css" href="../static/css/main.css" />
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+            <link rel="stylesheet" type="text/css" href="../static/css/flicker.css" />
+            <link href="https://fonts.googleapis.com/css?family=Share+Tech" rel="stylesheet">
+      </head>
+      <body class="bg-color fonts">
+        {% include 'navbar.html' %}
+        <div class="container">
+          {% block content %}
+          {% endblock %}
+         </div>
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+      </body>
+  </html>

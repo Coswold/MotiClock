@@ -1,0 +1,139 @@
+.bg-color {
+  background-color: #242423;
+}
+
+.fonts {
+  font-family: 'Share Tech', sans-serif;
+  color: #FFF;
+}
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+.form-control:focus {
+  border-color: #FF0000;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+/*description style*/
+.description{
+ position: absolute;
+ top: 40%;
+ margin: auto;
+ padding: 2em;
+}
+.description p{
+ font-size: 20px;
+ width: 50%;
+ line-height: 1.5;
+}
+.description a{
+ border:1px  solid rgba(50,205,50 ,1 );
+ background:#fff;
+}
+
+/*GLITCH style*/
+
+.anim{
+	text-align: center;
+	font-family: 'Share Tech', sans-serif;
+	font-weight: 800;
+	color: #FFF;
+	font-size: 80px;
+    animation: glitch 4s infinite;
+}
+
+.anim::after{
+    position: absolute;
+    content: attr(data-text);
+    bottom: 0;
+    left: 0;
+    color: #fff;
+    background-color: #242423;
+    width: 100%;
+    visibility: hidden;
+    animation: clip 4s infinite;
+}
+
+@keyframes glitch {
+	// FIRST GLITCH
+	30%{
+		text-shadow: 4px -4px 0px rgba(60, 85, 255, 1);
+	}
+	32%{
+		text-shadow: -4px 4px 0px rgba(50,205,50 ,1 );
+	}
+	0%, 28%, 34%{
+		text-shadow: none;
+	}
+	31%,32%{
+		transform: translate(-7px,7px);
+	}
+	32%,33%{
+		transform: translate(7px,-7px);
+	}
+	31%,33%{
+		transform: translatex(0);
+	}
+
+	// SECOND GLITCH
+	50%{
+		text-shadow: 4px 4px 0px rgba(60, 85, 255, 1);
+
+	}
+	52%{
+		text-shadow: -4px -4px 0px rgba(50,205,50 ,1 );
+
+	}
+	48%, 54%{
+		text-shadow: none;
+	}
+	49%,52%{
+		transform: translatex(0);
+	}
+	50%{
+		transform: translate(7px,7px);
+	}
+	51%{
+		transform: translate(-7px,-7px);
+	}
+}
+
+@keyframes clip{
+	28%, 31%{
+        clip: none;
+        left: 0;
+        visibility: visible;
+				color: #FFF;
+	}
+	30%{
+        clip: rect(60px, 999px, 80px, 0px);
+        left: -5px;
+				color: #D1C9B8;
+    }
+    48%, 52%{
+        clip: none;
+        left: 0;
+        visibility: visible;
+				color: #FFF;
+	}
+	50%{
+        clip: rect(30px, 999px, 55px, 0px);
+        left: 5px;
+				color: #D1C9B8;
+    }
+
+}
+
+/*txt glitch style*/

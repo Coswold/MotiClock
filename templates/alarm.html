@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>Alarm</title>
+	</head>
+		{% extends "template.html" %}
+		{% block content %}
+        <form class="center-screen" action="{{ url_for('set') }}" method="POST">
+          <div class="row">
+            <div class="col">
+                <label for="hour">Hour</label>
+                <input type="number" name="hour" value="1" min="1" max="12" step="1"/>
+            </div>
+            <div class="col">
+                <label for="minute">Minute</label>
+                <input type="number" name="minute" value="0" min="0" max="60" step="1"/>
+            </div>
+            <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="AM" value="0" checked>
+                  <label class="form-check-label" for="AM">AM</label>
+              </div><br>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="PM" value="1">
+                  <label class="form-check-label" for="PM">PM</label>
+                </div>
+            </div>
+          </div>
+          <input type = "submit" value = "submit" />
+        </form>
+		{% endblock %}
+</html>

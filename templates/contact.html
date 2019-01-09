@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>Contact</title>
+	</head>
+	<body>
+		{% extends "template.html" %}
+		{% block content %}
+        <div class="container center-screen">
+            <div class="contact-form">
+            <form>
+                <div class="row">
+                    <div class="col">
+                        <h1>Get In Touch</h1>
+                        <p>If you are interested in working together, or know
+                        of any opportunities where I could help a good cause,
+                        please reach out. Links to my Github, LinkedIn, and
+                        Medium profiles are below. Hope to hear from you soon,
+                        and thanks for stopping by!</p>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-lg"
+                            placeholder="YourEmail@email.com" name="email">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control form-control-lg"
+                            rows="8" placeholder="Your message" name="message"></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-outline-secondary btn-block"
+                        value="Send" name="">
+                    </div>
+                </div>
+            </form>
+    </div>
+        </div>
+		{% endblock %}
+	</body>
+</html>
