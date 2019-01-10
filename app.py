@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, abort
 from alarm import alarm_clock
 import datetime
+import random
 
 app = Flask(__name__)
 
@@ -22,10 +23,9 @@ def set():
 			minute = int(request.form['minute'])
 			dn = int(request.form['inlineRadioOptions'])
 
-			n_hour = hour
-			if dn == 1:
-				n_hour = hour + 12
-			time = datetime.time(n_hour, minute).strftime("%I:%M %p")
+			if (dn == 1 and hour < 12) or (hour == 12 and dn == 0):
+				hour += 12
+			time = datetime.time(hour, minute).strftime("%I:%M %p")
 
 		finally:
 			t_sec = alarm_clock(hour, minute, dn)
@@ -37,7 +37,8 @@ def about():
 
 @app.route("/yt")
 def yt():
-	return render_template('yt.html')
+	num = random.randint(1,32)
+	return render_template('yt.html', num = num)
 
 @app.route("/contact")
 def contact():
