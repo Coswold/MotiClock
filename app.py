@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, abort
 from alarm import alarm_clock
+import datetime
 
 app = Flask(__name__)
 
@@ -21,13 +22,22 @@ def set():
 			minute = int(request.form['minute'])
 			dn = int(request.form['inlineRadioOptions'])
 
+			n_hour = hour
+			if dn == 1:
+				n_hour = hour + 12
+			time = datetime.time(n_hour, minute).strftime("%I:%M %p")
+
 		finally:
-			if alarm_clock(hour, minute, dn) == True:
-				return render_template("alert.html")
+			t_sec = alarm_clock(hour, minute, dn)
+			return render_template("alert.html", time = time, t_sec = t_sec)
 
 @app.route("/about")
 def about():
 	return render_template('about.html')
+
+@app.route("/yt")
+def yt():
+	return render_template('yt.html')
 
 @app.route("/contact")
 def contact():
