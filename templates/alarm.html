@@ -9,7 +9,7 @@
         <form class="center-screen" action="{{ url_for('set') }}" method="POST">
             <div>
                 <img class="flicker-1" src="../static/images/green_clock@2x.png" alt="Logo">
-            </div><br>
+            </div><br><br>
           <div class="row">
             <div class="col">
                 <label for="hour">Hour</label>
@@ -28,9 +28,9 @@
                   <input class="form-check-input" type="radio" name="inlineRadioOptions" id="PM" value="1">
                   <label class="form-check-label" for="PM">PM</label>
                 </div>
-            </div>
           </div>
-          <input type = "submit" value = "submit" />
+      </div><br><br>
+          <input type = "submit" value = "submit" class="btn btn-outline-secondary btn-lg" />
         </form>
 		{% endblock %}
 </html>

@@ -10,11 +10,15 @@
 		{% block content %}
 
             <div class="wrapperloading">
-              <div class="text">Alarm Set {{ time }}</div>
+              <div class="text">Alarm Set: {{ time }}</div>
               <div class="inner">
                 <div class="loading up"></div>
                 <div class="loading down"></div>
               </div>
+          </div><br><br><br><br><br><br><br><br>
+            <div class="center-screen">
+                <a class="cc btn btn-outline-secondary btn-lg"
+                href="/alarm">Cancel</a>
             </div>
 
 		{% endblock %}

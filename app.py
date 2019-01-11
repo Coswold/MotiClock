@@ -37,7 +37,7 @@ def about():
 
 @app.route("/yt")
 def yt():
-	num = random.randint(1,32)
+	num = random.randint(0,84)
 	return render_template('yt.html', num = num)
 
 @app.route("/contact")
