@@ -11,7 +11,7 @@ app = Flask(__name__)
 conn = sqlite3.connect('clock.db')
 print("Opened database successfully")
 
-#conn.execute('CREATE TABLE user (_id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, alarm INTEGER)')
+conn.execute('CREATE TABLE IF NOT EXISTS user (_id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, alarm INTEGER)')
 
 conn.close()
 
@@ -100,18 +100,25 @@ def create():
 def set():
 	if request.method == 'POST':
 		try:
-			print(request)
-			hour = int(request.form['hour'])
-			minute = int(request.form['minute'])
-			dn = int(request.form['inlineRadioOptions'])
+			with sqlite3.connect("clock.db") as con:
+				cur = con.cursor()
+				cur.execute("SELECT alarm FROM user WHERE username = '{}'".format(session['user']))
+				alarm = cur.fetchall()
+				print(alarm[0])
 
-			if (dn == 1 and hour < 12):
-				hour += 12
-			elif (hour == 12 and dn == 0):
-				hour -= 12
-			time = datetime.time(hour, minute).strftime("%I:%M %p")
+				#if alarm[0] == None:
+				hour = int(request.form['hour'])
+				minute = int(request.form['minute'])
+				dn = int(request.form['inlineRadioOptions'])
+
+				if (dn == 1 and hour < 12):
+					hour += 12
+				elif (hour == 12 and dn == 0):
+					hour -= 12
+				time = datetime.time(hour, minute).strftime("%I:%M %p")
 
 		finally:
+			con.close()
 			t_sec = alarm_clock(hour, minute, dn)
 			return render_template("alert.html", time = time, t_sec = t_sec)
 
