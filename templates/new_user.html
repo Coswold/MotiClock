@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>About</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/login.css" />
+	</head>
+		{% extends "template.html" %}
+		{% block content %}
+            {% if session['logged_in'] %}
+            <div class="center-screen">
+                You're logged in already!
+            </div>
+
+            {% else %}
+            <div class="center-screen">
+                <form action="/create" method="POST">
+                    <div class="login">
+                        <div class="login-screen">
+                            <div class="app-title">
+                                <h1>New User</h1>
+                            </div>
+                            <div class="login-form">
+                                <div class="control-group">
+                                    <input type="text" class="login-field" value=""
+                                    placeholder="username" name="username">
+                                    <label class="login-field-icon fui-user"
+                                    for="login-name"></label>
+                                </div>
+                                <div class="control-group">
+                                    <input type="password" class="login-field"
+                                    value="" placeholder="password" name="password">
+                                    <label class="login-field-icon fui-lock"
+                                    for="login-pass"></label>
+                                </div>
+                                <div class="control-group">
+                                    <input type="password" class="login-field"
+                                    value="" placeholder="re-type password" name="password_v">
+                                    <label class="login-field-icon fui-lock"
+                                    for="login-pass"></label>
+                                </div>
+                                <input type="submit" value="Create"
+                                class="btn btn-primary btn-large btn-block">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+            </div>
+		{% endblock %}
+</html>

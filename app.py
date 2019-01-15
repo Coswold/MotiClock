@@ -1,4 +1,5 @@
 import sqlite3
+import uuid
 from flask import Flask, flash, redirect, render_template, request, session, abort
 from alarm import alarm_clock
 import datetime
@@ -6,6 +7,13 @@ import random
 import os
 
 app = Flask(__name__)
+
+conn = sqlite3.connect('clock.db')
+print("Opened database successfully")
+
+#conn.execute('CREATE TABLE user (_id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, alarm INTEGER)')
+
+conn.close()
 
 @app.route("/")
 def landing():
@@ -20,16 +28,67 @@ def alarm():
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
-	if request.form['password'] == 'password' and request.form['username'] == 'admin':
-		session['logged_in'] = True
-	else:
-		flash('Incorrect password')
-	return alarm()
+	if request.method == 'POST':
+		try:
+			password = request.form['password']
+			username = request.form['username']
+			hidden = uuid.uuid4()
+			with sqlite3.connect("clock.db") as con:
+				cur = con.cursor()
+				cur.execute("SELECT username, password FROM user WHERE username = '{}'".format(username))
+				rv = cur.fetchall()
+				print(rv)
+				hidden = rv[0][1]
+				us = rv[0][0]
+
+		except:
+			con.rollback()
+
+		finally:
+			con.close()
+			if (password == 'password' and username == 'admin') or (password == hidden and username == us):
+				session['logged_in'] = True
+			else:
+				msg = "Incorrect Password"
+				return render_template("result.html",msg = msg)
+			return alarm()
 
 @app.route("/logout")
 def logout():
 	session['logged_in'] = False
-	return landing()
+	return alarm()
+
+@app.route("/new_user")
+def new_user():
+	return render_template('new_user.html')
+
+@app.route('/create',methods = ['POST', 'GET'])
+def create():
+	if request.method == 'POST':
+		try:
+			user = request.form['username']
+			password = request.form['password']
+			password_v = request.form['password_v']
+
+			if password != password_v:
+				msg = "Passwords did not match"
+				return render_template("result.html",msg = msg)
+
+			with sqlite3.connect("clock.db") as con:
+				cur = con.cursor()
+				cur.execute("INSERT INTO user (username, password) VALUES (?,?)", (user,password) )
+
+				con.commit()
+				msg = "User Successfully Created. You are now logged in."
+				session['logged_in'] = True
+
+		except:
+			con.rollback()
+			msg = "Username or Password Invalid"
+
+		finally:
+			return render_template("result.html",msg = msg)
+			con.close()
 
 @app.route("/set", methods = ['POST', 'GET'])
 def set():
