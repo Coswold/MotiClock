@@ -48,6 +48,7 @@ def do_admin_login():
 			con.close()
 			if (password == 'password' and username == 'admin') or (password == hidden and username == us):
 				session['logged_in'] = True
+				session['user'] = username
 			else:
 				msg = "Incorrect Password"
 				return render_template("result.html",msg = msg)
@@ -74,6 +75,10 @@ def create():
 				msg = "Passwords did not match"
 				return render_template("result.html",msg = msg)
 
+			if password == "" or user == "":
+				msg = "All fields required"
+				return render_template("result.html",msg = msg)
+
 			with sqlite3.connect("clock.db") as con:
 				cur = con.cursor()
 				cur.execute("INSERT INTO user (username, password) VALUES (?,?)", (user,password) )
@@ -81,6 +86,7 @@ def create():
 				con.commit()
 				msg = "User Successfully Created. You are now logged in."
 				session['logged_in'] = True
+				session['user'] = user
 
 		except:
 			con.rollback()
@@ -99,8 +105,10 @@ def set():
 			minute = int(request.form['minute'])
 			dn = int(request.form['inlineRadioOptions'])
 
-			if (dn == 1 and hour < 12) or (hour == 12 and dn == 0):
+			if (dn == 1 and hour < 12):
 				hour += 12
+			elif (hour == 12 and dn == 0):
+				hour -= 12
 			time = datetime.time(hour, minute).strftime("%I:%M %p")
 
 		finally:
