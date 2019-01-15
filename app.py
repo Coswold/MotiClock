@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 from alarm import alarm_clock
 import datetime
 import random
+import os
 
 app = Flask(__name__)
 
@@ -12,7 +13,23 @@ def landing():
 
 @app.route("/alarm")
 def alarm():
-	return render_template('alarm.html')
+	if not session.get('logged_in'):
+		return render_template('login.html')
+	else:
+		return render_template('alarm.html')
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+	if request.form['password'] == 'password' and request.form['username'] == 'admin':
+		session['logged_in'] = True
+	else:
+		flash('Incorrect password')
+	return alarm()
+
+@app.route("/logout")
+def logout():
+	session['logged_in'] = False
+	return landing()
 
 @app.route("/set", methods = ['POST', 'GET'])
 def set():
@@ -45,4 +62,5 @@ def contact():
 	return render_template('contact.html')
 
 if __name__ == "__main__":
-    app.run()
+	app.secret_key = os.urandom(12)
+	app.run()

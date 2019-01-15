@@ -12,6 +12,11 @@
     display:block;
 }
 
+input:focus {
+border: 2px solid #74FA9B;
+box-shadow: none;
+}
+
 .center-screen {
   display: flex;
   flex-direction: column;
