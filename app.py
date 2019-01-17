@@ -11,7 +11,7 @@ app = Flask(__name__)
 conn = sqlite3.connect('clock.db')
 print("Opened database successfully")
 
-conn.execute('CREATE TABLE IF NOT EXISTS user (_id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, alarm INTEGER)')
+conn.execute('CREATE TABLE IF NOT EXISTS user (_id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, hour TEXT, minute TEXT, dn TEXT)')
 
 conn.close()
 
@@ -24,7 +24,32 @@ def alarm():
 	if not session.get('logged_in'):
 		return render_template('login.html')
 	else:
-		return render_template('alarm.html')
+		try:
+			with sqlite3.connect("clock.db") as con:
+				cur = con.cursor()
+				cur.execute("SELECT hour, minute, dn FROM user WHERE username = '{}'".format(session['user']))
+				alarm = cur.fetchall()
+				print(alarm)
+
+		except:
+			con.rollback()
+
+		finally:
+			con.close()
+			if alarm[0][0] != None and alarm[0][0] != "None":
+				hour = int(alarm[0][0])
+				minute = int(alarm[0][1])
+				dn = int(alarm[0][2])
+
+				if (dn == 1 and hour < 12):
+					hour += 12
+				elif (hour == 12 and dn == 0):
+					hour -= 12
+				time = datetime.time(hour, minute).strftime("%I:%M %p")
+				con.close()
+				t_sec = alarm_clock(hour, minute, dn)
+				return render_template("alert.html", time = time, t_sec = t_sec)
+			return render_template('alarm.html')
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
@@ -63,6 +88,22 @@ def logout():
 def new_user():
 	return render_template('new_user.html')
 
+@app.route('/delete',methods = ['DELETE', 'POST'])
+def delete():
+	if request.method == 'POST':
+		try:
+			with sqlite3.connect("clock.db") as con:
+				cur = con.cursor()
+				cur.execute("UPDATE user SET hour = '{}', minute = '{}', dn = '{}' WHERE username = '{}'".format(None, None, None, session['user']) )
+
+				con.commit()
+		except:
+			con.rollback()
+
+		finally:
+			return render_template("alarm.html")
+			con.close()
+
 @app.route('/create',methods = ['POST', 'GET'])
 def create():
 	if request.method == 'POST':
@@ -96,31 +137,34 @@ def create():
 			return render_template("result.html",msg = msg)
 			con.close()
 
-@app.route("/set", methods = ['POST', 'GET'])
+@app.route("/set", methods = ['POST'])
 def set():
-	if request.method == 'POST':
-		try:
-			with sqlite3.connect("clock.db") as con:
-				cur = con.cursor()
-				cur.execute("SELECT alarm FROM user WHERE username = '{}'".format(session['user']))
-				alarm = cur.fetchall()
-				print(alarm[0])
+	try:
+		with sqlite3.connect("clock.db") as con:
+			cur = con.cursor()
+			cur.execute("SELECT hour, minute, dn FROM user WHERE username = '{}'".format(session['user']))
+			alarm = cur.fetchall()
+			print(alarm)
 
-				#if alarm[0] == None:
+			if request.method == 'POST':
 				hour = int(request.form['hour'])
 				minute = int(request.form['minute'])
 				dn = int(request.form['inlineRadioOptions'])
+				cur.execute("UPDATE user SET hour = '{}', minute = '{}', dn = '{}' WHERE username = '{}'".format(hour, minute, dn, session['user']) )
+				con.commit()
 
-				if (dn == 1 and hour < 12):
-					hour += 12
-				elif (hour == 12 and dn == 0):
-					hour -= 12
-				time = datetime.time(hour, minute).strftime("%I:%M %p")
+	except:
+		con.rollback()
 
-		finally:
-			con.close()
-			t_sec = alarm_clock(hour, minute, dn)
-			return render_template("alert.html", time = time, t_sec = t_sec)
+	finally:
+		if (dn == 1 and hour < 12):
+			hour += 12
+		elif (hour == 12 and dn == 0):
+			hour -= 12
+		time = datetime.time(hour, minute).strftime("%I:%M %p")
+		con.close()
+		t_sec = alarm_clock(hour, minute, dn)
+		return render_template("alert.html", time = time, t_sec = t_sec)
 
 @app.route("/about")
 def about():
