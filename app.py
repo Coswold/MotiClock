@@ -71,7 +71,7 @@ def do_admin_login():
 
 		finally:
 			con.close()
-			if (password == 'password' and username == 'admin') or (password == hidden and username == us):
+			if (password == hidden and username == us):
 				session['logged_in'] = True
 				session['user'] = username
 			else:
@@ -113,11 +113,11 @@ def create():
 			password_v = request.form['password_v']
 
 			if password != password_v:
-				msg = "Passwords did not match"
+				msg = "Passwords Did Not Match"
 				return render_template("result.html",msg = msg)
 
 			if password == "" or user == "":
-				msg = "All fields required"
+				msg = "All Fields Required"
 				return render_template("result.html",msg = msg)
 
 			with sqlite3.connect("clock.db") as con:
@@ -125,7 +125,7 @@ def create():
 				cur.execute("INSERT INTO user (username, password) VALUES (?,?)", (user,password) )
 
 				con.commit()
-				msg = "User Successfully Created. You are now logged in."
+				msg = "User Successfully Created. You Are Now Logged In."
 				session['logged_in'] = True
 				session['user'] = user
 
